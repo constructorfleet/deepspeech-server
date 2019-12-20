@@ -128,8 +128,7 @@ def deepspeech_server(sources):
              lambda e: httpd.Response(
                 data="Speech to text error".encode('utf-8'),
                 context=e.args[0].context,
-                status=500,),
-             lambda i: i
+                status=500)
              )
         .map(lambda i: httpd.Response(
             data=i.text.encode('utf-8'),
