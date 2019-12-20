@@ -45,11 +45,11 @@ def make_driver(loop=None):
                 log("creating model {} {} with features {}...".format(model_path, alphabet, features))
                 ds_model = Model(
                     model_path,
-                    features.n_features, features.n_context, alphabet, features.beam_width)
+                    features.beam_width)
 
                 if lm and trie:
                     ds_model.enableDecoderWithLM(
-                        alphabet, lm, trie,
+                        lm, trie,
                         features.lm_alpha, features.lm_beta)
                 log("model is ready.")
                 return ds_model
