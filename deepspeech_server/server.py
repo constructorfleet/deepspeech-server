@@ -77,10 +77,10 @@ def deepspeech_server(sources):
             .concat(Observable.just(logging.SetLevelDone()))
         )
     )
-    
+
     logs = Observable.merge(logs_config, ds_logs)
     log_ready = sources.logging.response.take(1)
-    
+
     ds_stt = (
         stt
         .flat_map(lambda i: i.request)
@@ -90,7 +90,7 @@ def deepspeech_server(sources):
     ds_arg = (
         # config is hot, the combine operator allows to keep its last value
         # until logging is initialized
-        log_ready.combine_latest(config, lambda _, i: i) 
+        log_ready.combine_latest(config, lambda _, i: i)
         .map(lambda i: deepspeech.Initialize(
             model=i.deepspeech.model,
             alphabet=i.deepspeech.alphabet,
@@ -124,12 +124,12 @@ def deepspeech_server(sources):
 
     http_response = (
         stt_response
-        .let(route_ds_error,
-             lambda e: httpd.Response(
+        .let(lambda: route_ds_error(
+            error_map=lambda e: httpd.Response(
                 data="Speech to text error".encode('utf-8'),
                 context=e.args[0].context,
-                status=500)
-             )
+                status=500
+        )))
         .map(lambda i: httpd.Response(
             data=i.text.encode('utf-8'),
             context=i.context,
