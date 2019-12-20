@@ -66,7 +66,7 @@ def make_driver(loop=None):
                             # todo: move to a component or just a function here
                             if len(audio.shape) > 1:
                                 audio = audio[:, 0]
-                            text = ds_model.stt(audio, fs)
+                            text = ds_model.stt(audio)  # , fs)
                             log("STT result: {}".format(text))
                             observer.on_next(Observable.just(TextResult(
                                 text=text,
